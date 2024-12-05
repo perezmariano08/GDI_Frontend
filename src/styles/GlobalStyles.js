@@ -19,6 +19,7 @@ export const GlobalStyles = createGlobalStyle`
         --import: #6366F1;
         --export: #A855F7
     }
+    
 
     html {
         scroll-behavior: smooth;
