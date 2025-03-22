@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { EquipoBodyTemplate, PartidosContainer, PartidosDataTable, PartidosWrapper, ResultadoBodyTemplate } from './PartidosStyles'
-import { usePartidos } from '../../hooks/api/partidos/usePartidos';
+import { usePartidos } from '../../hooks/api/usePartidos';
 import { Column } from 'primereact/column';
 import { FilterMatchMode } from 'primereact/api';
 import { URL_IMAGES } from '../../utils/constants';
@@ -85,8 +85,6 @@ const Partidos = () => {
         // Navegar a la página de detalles del partido
         navigate(`/partidos/${rowData.ruta_equipos}/${rowData.id_partido}`);
     };
-
-    console.log(partidos);
 
     return (
         <PartidosContainer>

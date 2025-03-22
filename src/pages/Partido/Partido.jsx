@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
 import { NavLink, useParams, useSearchParams } from 'react-router-dom';
-import { usePartido } from '../../hooks/api/partidos/usePartido';
-import { usePartidoAlineaciones } from '../../hooks/api/Partidos/usePartidoAlineaciones';
 import { PartidoAlineacionesEquipo, PartidoAlineacionesEquipoJugador, PartidoAlineacionesEquipoJugadores, PartidoAlineacionesEquipoJugadoresTitulo, PartidoAlineacionesEquipoJugadoresWrapper, PartidoAlineacionesEquipoJugadorIncidencia, PartidoAlineacionesEquipoJugadorIncidencias, PartidoAlineacionesEquipoJugadorNombre, PartidoAlineacionesEquipoJugadorNombreWrapper, PartidoAlineacionesEquipoNombre, PartidoAlineacionesEquipoTitulo, PartidoAlineacionesEquipoTituloSwitch, PartidoAlineacionesEquipoTituloWrapper, PartidoAlineacionesWrapper, PartidoContainer, PartidoDetallesArbitroEstadio, PartidoDetallesEquipo, PartidoDetallesEquipos, PartidoDetallesFecha, PartidoDetallesGoles, PartidoDetallesGolesEquipo, PartidoDetallesGolesIcono, PartidoDetallesInformacionMobile, PartidoDetallesResultado, PartidoDetallesRojasIcono, PartidoDetallesWrapper, PartidoInformacionAdicionalItem, PartidoInformacionAdicionalWrapper, PartidoWrapper } from './PartidoStyles';
 import { URL_IMAGES } from '../../utils/constants';
 import { PiSoccerBallFill } from "react-icons/pi";
 import { formatearFecha } from '../../utils/formatearFecha';
-import { usePartidoGoles } from '../../hooks/api/partidos/usePartidoGoles';
 import { HiArrowLeftCircle, HiArrowRightCircle } from "react-icons/hi2";
 import { TbRectangleVerticalFilled } from "react-icons/tb";
-import { usePartidoCambios, usePartidosIncidencias } from '../../hooks/api/partidos/usePartidos';
+import { usePartido, usePartidoAlineaciones, usePartidoCambios, usePartidosIncidencias } from '../../hooks/api/usePartidos';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import PartidoMenu from './PartidoMenu';
@@ -68,7 +65,6 @@ const Partido = () => {
     const dt_local = condicion === "V" ?  dt_rival : dt_iacc
     const dt_visita = condicion !== "V" ?  dt_rival : dt_iacc
     
-    console.log(alineacion_local);
     
     // Skeleton
     if (partidoLoading || incidenciasLoading) {
@@ -103,10 +99,7 @@ const Partido = () => {
                 </PartidoWrapper>
             </PartidoContainer>
         );
-    }
-
-    console.log(goles);
-    
+    }    
 
     return (
         <PartidoContainer>
