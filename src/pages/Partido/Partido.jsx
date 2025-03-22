@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { NavLink, useParams, useSearchParams } from 'react-router-dom';
-import { usePartido } from '../../hooks/api/Partidos/usePartido';
+import { usePartido } from '../../hooks/api/partidos/usePartido';
 import { usePartidoAlineaciones } from '../../hooks/api/Partidos/usePartidoAlineaciones';
 import { PartidoAlineacionesEquipo, PartidoAlineacionesEquipoJugador, PartidoAlineacionesEquipoJugadores, PartidoAlineacionesEquipoJugadoresTitulo, PartidoAlineacionesEquipoJugadoresWrapper, PartidoAlineacionesEquipoJugadorIncidencia, PartidoAlineacionesEquipoJugadorIncidencias, PartidoAlineacionesEquipoJugadorNombre, PartidoAlineacionesEquipoJugadorNombreWrapper, PartidoAlineacionesEquipoNombre, PartidoAlineacionesEquipoTitulo, PartidoAlineacionesEquipoTituloSwitch, PartidoAlineacionesEquipoTituloWrapper, PartidoAlineacionesWrapper, PartidoContainer, PartidoDetallesArbitroEstadio, PartidoDetallesEquipo, PartidoDetallesEquipos, PartidoDetallesFecha, PartidoDetallesGoles, PartidoDetallesGolesEquipo, PartidoDetallesGolesIcono, PartidoDetallesInformacionMobile, PartidoDetallesResultado, PartidoDetallesRojasIcono, PartidoDetallesWrapper, PartidoInformacionAdicionalItem, PartidoInformacionAdicionalWrapper, PartidoWrapper } from './PartidoStyles';
 import { URL_IMAGES } from '../../utils/constants';
