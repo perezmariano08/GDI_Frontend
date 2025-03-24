@@ -102,11 +102,11 @@ const Partidos = () => {
                             removableSort
                             loading={isLoading}
                             paginator 
-                            rows={50} 
+                            rows={100} 
                             filters={filters}
                             globalFilterFields={['nombre_equipo', 'dia_formateado']} 
                             filterDisplay="row" 
-                            rowsPerPageOptions={[5, 10, 25, 50]} 
+                            rowsPerPageOptions={[100, 200, 500]} 
                             value={partidos} 
                             onRowClick={(e) => handleRowClick(e.data)} // Añadir el evento onRowClick
                         >

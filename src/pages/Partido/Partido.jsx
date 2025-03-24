@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { NavLink, useParams, useSearchParams } from 'react-router-dom';
-import { PartidoAlineacionesEquipo, PartidoAlineacionesEquipoJugador, PartidoAlineacionesEquipoJugadores, PartidoAlineacionesEquipoJugadoresTitulo, PartidoAlineacionesEquipoJugadoresWrapper, PartidoAlineacionesEquipoJugadorIncidencia, PartidoAlineacionesEquipoJugadorIncidencias, PartidoAlineacionesEquipoJugadorNombre, PartidoAlineacionesEquipoJugadorNombreWrapper, PartidoAlineacionesEquipoNombre, PartidoAlineacionesEquipoTitulo, PartidoAlineacionesEquipoTituloSwitch, PartidoAlineacionesEquipoTituloWrapper, PartidoAlineacionesWrapper, PartidoContainer, PartidoDetallesArbitroEstadio, PartidoDetallesEquipo, PartidoDetallesEquipos, PartidoDetallesFecha, PartidoDetallesGoles, PartidoDetallesGolesEquipo, PartidoDetallesGolesIcono, PartidoDetallesInformacionMobile, PartidoDetallesResultado, PartidoDetallesRojasIcono, PartidoDetallesWrapper, PartidoInformacionAdicionalItem, PartidoInformacionAdicionalWrapper, PartidoWrapper } from './PartidoStyles';
-import { URL_IMAGES } from '../../utils/constants';
+import { PartidoAlineacionesEquipo, PartidoAlineacionesEquipoJugador, PartidoAlineacionesEquipoJugadores, PartidoAlineacionesEquipoJugadoresTitulo, PartidoAlineacionesEquipoJugadoresWrapper, PartidoAlineacionesEquipoJugadorIncidencia, PartidoAlineacionesEquipoJugadorIncidencias, PartidoAlineacionesEquipoJugadorNombre, PartidoAlineacionesEquipoJugadorNombreWrapper, PartidoAlineacionesEquipoNombre, PartidoAlineacionesEquipoTitulo, PartidoAlineacionesEquipoTituloSwitch, PartidoAlineacionesEquipoTituloWrapper, PartidoAlineacionesWrapper, PartidoContainer, PartidoDetallesArbitroEstadio, PartidoDetallesEquipo, PartidoDetallesEquipos, PartidoDetallesFecha, PartidoDetallesGoles, PartidoDetallesGolesEquipo, PartidoDetallesGolesIcono, PartidoDetallesInformacionMobile, PartidoDetallesResultado, PartidoDetallesRojasIcono, PartidoDetallesWrapper, PartidoInformacionAdicionalItem, PartidoInformacionAdicionalWrapper, PartidoNavegador, PartidoWrapper, PartidoWrapperLeft, PartidoWrapperRight } from './PartidoStyles';
+import { URL_IMAGES, URL_VIDEOS } from '../../utils/constants';
 import { PiSoccerBallFill } from "react-icons/pi";
 import { formatearFecha } from '../../utils/formatearFecha';
 import { HiArrowLeftCircle, HiArrowRightCircle } from "react-icons/hi2";
@@ -15,7 +15,8 @@ import { GiWhistle } from "react-icons/gi";
 import { MdOutlineStadium } from "react-icons/md";
 import { TbSoccerField } from "react-icons/tb";
 import { HiOutlineTrophy } from "react-icons/hi2";
-import { IoMdCalendar } from "react-icons/io";
+import { IoIosArrowBack, IoMdCalendar } from "react-icons/io";
+import PartidoAlineaciones from './PartidoAlineaciones';
 
 
 const Partido = () => {
@@ -42,6 +43,7 @@ const Partido = () => {
         dia,
         hora,
         id_equipo_rival,
+        link
     } = partido || []
 
     const { data: alineaciones, error: alineacionesError, isLoading: alineacionesLoading} = usePartidoAlineaciones(id_partido);
@@ -83,16 +85,20 @@ const Partido = () => {
                         </PartidoDetallesArbitroEstadio>
                         <PartidoDetallesEquipos>
                             <PartidoDetallesEquipo>
-                                <Skeleton width={100} height={20}/>
-                                <Skeleton width={40} height={40} borderRadius={'100%'}/>
+                                <NavLink>
+                                    <Skeleton width={100} height={20}/>
+                                    <Skeleton width={40} height={40} borderRadius={'100%'}/>
+                                </NavLink>
                             </PartidoDetallesEquipo>
                             <PartidoDetallesResultado>
                                 <Skeleton width={60} height={24}/>
                                 <Skeleton width={80} height={14}/>
                             </PartidoDetallesResultado>
                             <PartidoDetallesEquipo className='visitante'>
-                                <Skeleton width={100} height={20}/>
-                                <Skeleton width={40} height={40} borderRadius={'100%'}/>
+                                <NavLink>
+                                    <Skeleton width={100} height={20}/>
+                                    <Skeleton width={40} height={40} borderRadius={'100%'}/>
+                                </NavLink>
                             </PartidoDetallesEquipo>
                         </PartidoDetallesEquipos>
                     </PartidoDetallesWrapper>
@@ -101,16 +107,135 @@ const Partido = () => {
         );
     }    
 
+    console.log(goles);
+    
+
     return (
         <PartidoContainer>
             <PartidoWrapper>
-                {/* Detalles del partido */}
-                <PartidoDetallesWrapper className={estado === "S" && 'suspendido'}>
-                    <PartidoDetallesFecha>
-                        <p>{torneo} {temporada}</p>
-                        <p>{fase && `${fase} |`} {jornada}</p>
-                    </PartidoDetallesFecha>
-                    <PartidoDetallesArbitroEstadio>
+                <PartidoWrapperLeft>
+                    {/* <PartidoNavegador>
+                        <div className="arrow">
+                            <IoIosArrowBack />
+                        </div>
+                        Volver
+                    </PartidoNavegador> */}
+                    {/* Detalles del partido */}
+                    <PartidoDetallesWrapper className={estado === "S" && 'suspendido'}>
+                        <PartidoDetallesFecha>
+                            <p>{torneo} {temporada}</p>
+                            <p>{fase && `${fase} |`} {jornada}</p>
+                        </PartidoDetallesFecha>
+                        <PartidoDetallesArbitroEstadio>
+                            <div className="item">
+                                <IoMdCalendar />
+                                <p>{formatearFecha(dia)}</p>
+                            </div>
+                            <div className="item">
+                                <GiWhistle />
+                                <p>{arbitro}</p>
+                            </div>
+                            <div className="item">
+                                <TbSoccerField />
+                                <p>{estadio}</p>
+                            </div>
+                        </PartidoDetallesArbitroEstadio>
+                        <PartidoDetallesEquipos>
+                            <PartidoDetallesEquipo>
+                                <NavLink to={`/equipos/${id_equipo_local}`}>
+                                    <span>{nombre_local}</span>
+                                    <img src={`${URL_IMAGES}escudos/${escudo_local}`} />
+                                </NavLink>
+                            </PartidoDetallesEquipo>
+                            <PartidoDetallesResultado>
+                                <span>{`${goles_local} - ${goles_visita}`}</span>
+                                {estado === "F" && <p>Finalizado</p>}
+                                {estado === "S" && <p>Suspendido</p>}
+                            </PartidoDetallesResultado>
+                            <PartidoDetallesEquipo className="visitante">
+                                <NavLink to={`/equipos/${id_equipo_visita}`}>
+                                    <span>{nombre_visita}</span>
+                                    <img src={`${URL_IMAGES}escudos/${escudo_visita}`} />
+                                </NavLink>
+                            </PartidoDetallesEquipo>                        
+                        </PartidoDetallesEquipos>
+                        {/* Renderizar goles */}
+                        {goles.length > 0 && (
+                            <PartidoDetallesGoles>
+                                {/* Goles del equipo local (incluye autogoles del visitante) */}
+                                <PartidoDetallesGolesEquipo>
+                                    {goles
+                                        .filter((g) =>
+                                            (g.id_equipo === id_equipo_local && g.en_contra === "N") ||
+                                            (g.id_equipo === id_equipo_visita && g.en_contra === "S")
+                                        )
+                                        .map((g) => {
+                                            const nombreJugador = `${g.nombre[0]}. ${g.apellido}`; // Concatenar la primera letra del nombre con el apellido
+                                            const esAutogol = g.en_contra === "S" && g.id_equipo !== id_equipo_local ? " (EC)" : "";
+                                            const esPenal = g.penal === "S" ? " -p-" : "";
+                                            
+                                            return (
+                                                <p key={`${g.id_partido}-${g.id_jugador || g.jugador}-${g.minuto}`}>
+                                                    {nombreJugador}{esPenal}{esAutogol} {g.minuto}'
+                                                </p>
+                                            );
+                                        })}
+                                </PartidoDetallesGolesEquipo>
+
+                                <PartidoDetallesGolesIcono>
+                                    <PiSoccerBallFill />
+                                </PartidoDetallesGolesIcono>
+
+                                {/* Goles del equipo visitante (incluye autogoles del local) */}
+                                <PartidoDetallesGolesEquipo className="visitante">
+                                    {goles
+                                        .filter((g) =>
+                                            (g.id_equipo === id_equipo_visita && g.en_contra === "N") ||
+                                            (g.id_equipo === id_equipo_local && g.en_contra === "S")
+                                        )
+                                        .map((g) => {
+                                            const nombreJugador = `${g.nombre[0]}. ${g.apellido}`; // Concatenar la primera letra del nombre con el apellido
+                                            const esAutogol = g.en_contra === "S" && g.id_equipo !== id_equipo_visita ? " (EC)" : "";
+                                            const esPenal = g.penal === "S" ? " -p-" : "";
+                                            
+                                            return (
+                                                <p key={`${g.id_partido}-${g.id_jugador || g.jugador}-${g.minuto}`}>
+                                                    {g.minuto}' {nombreJugador}{esPenal}{esAutogol}
+                                                </p>
+                                            );
+                                        })}
+                                </PartidoDetallesGolesEquipo>
+                            </PartidoDetallesGoles>
+                        )}
+
+                        {/* Renderizar rojas */}
+                        {rojas.length > 0 && (
+                            <PartidoDetallesGoles>
+                                <PartidoDetallesGolesEquipo>
+                                    {
+                                        rojas
+                                        .filter((g) => g.id_equipo === id_equipo_local)
+                                        .map((g) => (
+                                            <p key={g.dorsal}>{g.apellido ? `${g.nombre[0]}. ${g.apellido} ${g.minuto}'` : `${g.jugador} ${g.minuto}'`}</p>
+                                        ))
+                                    }
+                                </PartidoDetallesGolesEquipo>
+                                <PartidoDetallesRojasIcono>
+                                    <TbRectangleVerticalFilled />
+                                </PartidoDetallesRojasIcono>
+                                <PartidoDetallesGolesEquipo className="visitante">
+                                    {
+                                        rojas
+                                        .filter((g) => g.id_equipo === id_equipo_visita)
+                                        .map((g) => (
+                                            <p key={g.dorsal}>{g.apellido ? `${g.minuto}' ${g.nombre[0]}. ${g.apellido}` : `${g.minuto}' ${g.jugador} `}</p>
+                                        ))
+                                    }
+                                </PartidoDetallesGolesEquipo>
+                            </PartidoDetallesGoles>
+                        )}
+                    </PartidoDetallesWrapper>
+                    <PartidoDetallesInformacionMobile>
                         <div className="item">
                             <IoMdCalendar />
                             <p>{formatearFecha(dia)}</p>
@@ -123,548 +248,60 @@ const Partido = () => {
                             <TbSoccerField />
                             <p>{estadio}</p>
                         </div>
-                    </PartidoDetallesArbitroEstadio>
-                    <PartidoDetallesEquipos>
-                        <PartidoDetallesEquipo>
-                            <span>{nombre_local}</span>
-                            <img src={`${URL_IMAGES}escudos/${escudo_local}`} />
-                        </PartidoDetallesEquipo>
-                        <PartidoDetallesResultado>
-                            <span>{`${goles_local} - ${goles_visita}`}</span>
-                            {estado === "F" && <p>Finalizado</p>}
-                            {estado === "S" && <p>Suspendido</p>}
-                        </PartidoDetallesResultado>
-                        <PartidoDetallesEquipo className="visitante">
-                            <span>{nombre_visita}</span>
-                            <img src={`${URL_IMAGES}escudos/${escudo_visita}`} />
-                        </PartidoDetallesEquipo>                        
-                    </PartidoDetallesEquipos>
-                    {/* Renderizar goles */}
-                    {goles.length > 0 && (
-                        <PartidoDetallesGoles>
-                            {/* Goles del equipo local (incluye autogoles del visitante) */}
-                            <PartidoDetallesGolesEquipo>
-                                {goles
-                                    .filter((g) =>
-                                        (g.id_equipo === id_equipo_local && g.en_contra === "N") ||
-                                        (g.id_equipo === id_equipo_visita && g.en_contra === "S")
-                                    )
-                                    .map((g) => {
-                                        const nombreJugador = g.id_jugador
-                                            ? `${g.apellido}, ${g.nombre}`
-                                            : g.jugador;
-                                        const esAutogol = g.en_contra === "S" && g.id_equipo !== id_equipo_local ? " (EC)" : "";
-                                        const esPenal = g.penal === "S" ? " -p-" : "";
-                                        
-                                        return (
-                                            <p key={`${g.id_partido}-${g.id_jugador || g.jugador}-${g.minuto}`}>
-                                                {nombreJugador}{esPenal}{esAutogol} {g.minuto}'
-                                            </p>
-                                        );
-                                    })}
-                            </PartidoDetallesGolesEquipo>
-
-                            <PartidoDetallesGolesIcono>
-                                <PiSoccerBallFill />
-                            </PartidoDetallesGolesIcono>
-
-                            {/* Goles del equipo visitante (incluye autogoles del local) */}
-                            <PartidoDetallesGolesEquipo className="visitante">
-                                {goles
-                                    .filter((g) =>
-                                        (g.id_equipo === id_equipo_visita && g.en_contra === "N") ||
-                                        (g.id_equipo === id_equipo_local && g.en_contra === "S")
-                                    )
-                                    .map((g) => {
-                                        const nombreJugador = g.id_jugador
-                                            ? `${g.apellido}, ${g.nombre}`
-                                            : g.jugador;
-                                        const esAutogol = g.en_contra === "S" && g.id_equipo !== id_equipo_visita ? " (EC)" : "";
-                                        const esPenal = g.penal === "S" ? " -p-" : "";
-                                        
-                                        return (
-                                            <p key={`${g.id_partido}-${g.id_jugador || g.jugador}-${g.minuto}`}>
-                                                {g.minuto}' {nombreJugador}{esPenal}{esAutogol}
-                                            </p>
-                                        );
-                                    })}
-                            </PartidoDetallesGolesEquipo>
-                        </PartidoDetallesGoles>
-                    )}
-                    {/* Renderizar rojas */}
-                    {rojas.length > 0 && (
-                        <PartidoDetallesGoles>
-                            <PartidoDetallesGolesEquipo>
-                                {
-                                    rojas
-                                    .filter((g) => g.id_equipo === id_equipo_local)
-                                    .map((g) => (
-                                        <p key={g.dorsal}>{g.apellido ? `${g.apellido}, ${g.nombre} ${g.minuto}'` : `${g.jugador} ${g.minuto}'`}</p>
-                                    ))
-                                }
-                            </PartidoDetallesGolesEquipo>
-                            <PartidoDetallesRojasIcono>
-                                <TbRectangleVerticalFilled />
-                            </PartidoDetallesRojasIcono>
-                            <PartidoDetallesGolesEquipo className="visitante">
-                                {
-                                    rojas
-                                    .filter((g) => g.id_equipo === id_equipo_visita)
-                                    .map((g) => (
-                                        <p key={g.dorsal}>{g.apellido ? `${g.minuto}' ${g.apellido}, ${g.nombre}` : `${g.minuto}' ${g.jugador} `}</p>
-                                    ))
-                                }
-                            </PartidoDetallesGolesEquipo>
-                        </PartidoDetallesGoles>
-                    )}
-                </PartidoDetallesWrapper>
-                <PartidoDetallesInformacionMobile>
-                    <div className="item">
-                        <IoMdCalendar />
-                        <p>{formatearFecha(dia)}</p>
-                    </div>
-                    <div className="item">
-                        <GiWhistle />
-                        <p>{arbitro}</p>
-                    </div>
-                    <div className="item">
-                        <TbSoccerField />
-                        <p>{estadio}</p>
-                    </div>
-                </PartidoDetallesInformacionMobile>
-                {/* ALineaciones del partido */}
-                <PartidoAlineacionesWrapper>
-                    <PartidoAlineacionesEquipo>
-                        {/* Switch de equipos con animación */}
-                        <PartidoAlineacionesEquipoTituloWrapper>
-                            <PartidoAlineacionesEquipoTitulo>{/* Indicador animado debajo de la opción seleccionada */}
-                                <PartidoAlineacionesEquipoTituloSwitch 
-                                    className="switch-indicator"
-                                    initial={{ x: equipoSeleccionado === "local" ? "0%" : "100%" }}
-                                    animate={{ x: equipoSeleccionado === "local" ? "0%" : "100%" }}
-                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                />
-                                <PartidoAlineacionesEquipoNombre 
-                                    className={equipoSeleccionado === "local" ? "active" : ""}
-                                    onClick={() => setEquipoSeleccionado("local")}
-                                >
-                                    <img src={`${URL_IMAGES}escudos/${escudo_local}`} />
-                                    {nombre_local}
-                                </PartidoAlineacionesEquipoNombre>
-                                <PartidoAlineacionesEquipoNombre 
-                                className={equipoSeleccionado === "visitante" ? "active" : ""}
-                                onClick={() => setEquipoSeleccionado("visitante")}
-                                >
-                                    <img src={`${URL_IMAGES}escudos/${escudo_visita}`} />
-                                    {nombre_visita}
-                                </PartidoAlineacionesEquipoNombre>
-                            </PartidoAlineacionesEquipoTitulo>
-                        </PartidoAlineacionesEquipoTituloWrapper>
-                        {/* Contenido animado del equipo seleccionado */}
-                        <PartidoAlineacionesEquipoJugadores
-                            key={equipoSeleccionado}
-                            initial={{ opacity: 0, x: -50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -50 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            {equipoSeleccionado === "local" ? <>
-                                <PartidoAlineacionesEquipoJugadoresTitulo>
-                                    Alineación titular
-                                </PartidoAlineacionesEquipoJugadoresTitulo>
-                                <PartidoAlineacionesEquipoJugadoresWrapper>
-                                    {
-                                        alineacion_local
-                                        .filter((a) => a.condicion === "T")
-                                        .map((a) => (
-                                            <PartidoAlineacionesEquipoJugador key={`${a.id_jugador}${a.dorsal}`}>
-                                                <PartidoAlineacionesEquipoJugadorNombreWrapper>
-                                                    <img 
-                                                        src={`${URL_IMAGES}jugadores/${a.id_jugador}.jpg`} 
-                                                        onError={(e) => e.target.src = `${URL_IMAGES}jugadores/player-default.png`} 
-                                                        alt="Jugador"
-                                                    />
-                                                    <span>{a.dorsal}</span>
-                                                    <PartidoAlineacionesEquipoJugadorNombre>
-                                                        <div>
-                                                            {a.nacionalidad && <img src={`${URL_IMAGES}banderas/${a.nacionalidad}.png`} />}
-                                                            {
-                                                                a.id_jugador ? <NavLink to={`/jugadores/${a.id_jugador}`}>
-                                                                    {a.nombre_completo}
-                                                                </NavLink> 
-                                                                : <span>{a.nombre_completo}</span>
-                                                            }                                               
-                                                        </div>
-                                                        <p>{a.posicion}</p>
-                                                    </PartidoAlineacionesEquipoJugadorNombre>
-                                                </PartidoAlineacionesEquipoJugadorNombreWrapper>
-                                                <PartidoAlineacionesEquipoJugadorIncidencias>
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador (ajusta la condición según tus datos)
-                                                        const golesJugador = goles?.filter((c) => 
-                                                            (a.id_jugador ? c.id_jugador === a.id_jugador : c.dorsal === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_local
-                                                        );
-                                                        
-                                                        return golesJugador?.map((incidencia, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index}>
-                                                                <div>
-                                                                    <PiSoccerBallFill />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                    
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador (ajusta la condición según tus datos)
-                                                        const rojasJugador = rojas?.filter((c) => 
-                                                            (a.id_jugador ? c.id_jugador === a.id_jugador : c.dorsal === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_local
-                                                        );
-                                                        return rojasJugador?.map((incidencia, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='roja'>
-                                                                <div>
-                                                                    <TbRectangleVerticalFilled />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador basándonos en la existencia de id_jugador                                                        
-                                                        const cambioJugador = cambios?.filter((c) => 
-                                                            (a.id_jugador && a.id_equipo !== 66 ? c.id_jugador_entrante === a.id_jugador : c.dorsal_entrante === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_local
-                                                        );
-
-                                                        return cambioJugador?.map((c, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='cambio_entra'>
-                                                                <p>{c.minuto}'</p>
-                                                                <div>
-                                                                    <HiArrowLeftCircle />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador basándonos en la existencia de id_jugador
-                                                        const cambioJugador = cambios?.filter((c) => 
-                                                            (a.id_jugador ? c.id_jugador_saliente === a.id_jugador : c.dorsal_saliente === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_local
-                                                        );                                                    
-
-                                                        return cambioJugador?.map((c, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='cambio_sale'>
-                                                                <p>{c.minuto}'</p>
-                                                                <div>
-                                                                    <HiArrowLeftCircle />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                </PartidoAlineacionesEquipoJugadorIncidencias>
-
-                                            </PartidoAlineacionesEquipoJugador>
-                                        ))
-                                    }
-                                </PartidoAlineacionesEquipoJugadoresWrapper>                               
-                                <PartidoAlineacionesEquipoJugadoresTitulo>
-                                    Suplentes
-                                </PartidoAlineacionesEquipoJugadoresTitulo>
-                                <PartidoAlineacionesEquipoJugadoresWrapper>
-                                    {
-                                        alineacion_local
-                                        .filter((a) => a.condicion !== "T")
-                                        .map((a) => (
-                                            <PartidoAlineacionesEquipoJugador>
-                                                <PartidoAlineacionesEquipoJugadorNombreWrapper>
-                                                    <img src={`${URL_IMAGES}jugadores/player-default.png`} />
-                                                    <span>{a.dorsal}</span>
-                                                    <PartidoAlineacionesEquipoJugadorNombre>
-                                                        <div>
-                                                            {a.nacionalidad && <img src={`${URL_IMAGES}banderas/${a.nacionalidad}.png`} />}
-                                                            {
-                                                                a.id_jugador ? <NavLink to={`/jugadores/${a.id_jugador}`}>
-                                                                    {a.nombre_completo}
-                                                                </NavLink> 
-                                                                : <span>{a.nombre_completo} </span>
-                                                            }                                               
-                                                        </div>
-                                                        <p>{a.posicion}</p>
-                                                    </PartidoAlineacionesEquipoJugadorNombre>
-                                                    
-                                                </PartidoAlineacionesEquipoJugadorNombreWrapper>
-                                                <PartidoAlineacionesEquipoJugadorIncidencias>
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador (ajusta la condición según tus datos)
-
-                                                        const golesJugador = goles?.filter((c) => 
-                                                            (a.id_jugador ? c.id_jugador === a.id_jugador : c.dorsal === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_local
-                                                        );
-                                                        
-                                                        return golesJugador.map((incidencia, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index}>
-                                                                <div>
-                                                                    <PiSoccerBallFill />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador (ajusta la condición según tus datos)
-                                                        const rojasJugador = rojas?.filter((c) => 
-                                                            (a.id_jugador ? c.id_jugador === a.id_jugador : c.dorsal === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_local
-                                                        );
-                                                        return rojasJugador.map((incidencia, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='roja'>
-                                                                <div>
-                                                                    <TbRectangleVerticalFilled />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador basándonos en la existencia de id_jugador                                                        
-                                                        const cambioJugador = cambios?.filter((c) => 
-                                                            (a.id_jugador && a.id_equipo !== 66 ? c.id_jugador_entrante === a.id_jugador : c.dorsal_entrante === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_local
-                                                        );
-
-                                                        return cambioJugador?.map((c, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='cambio_entra'>
-                                                                <p>{c.minuto}'</p>
-                                                                <div>
-                                                                    <HiArrowLeftCircle />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador basándonos en la existencia de id_jugador
-                                                        const cambioJugador = cambios?.filter((c) => 
-                                                            (a.id_jugador ? c.id_jugador_saliente === a.id_jugador : c.dorsal_saliente === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_local
-                                                        );                                                    
-
-                                                        return cambioJugador?.map((c, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='cambio_sale'>
-                                                                <p>{c.minuto}'</p>
-                                                                <div>
-                                                                    <HiArrowLeftCircle />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-
-                                                </PartidoAlineacionesEquipoJugadorIncidencias>
-
-                                            </PartidoAlineacionesEquipoJugador>
-                                        ))
-                                    }
-                                </PartidoAlineacionesEquipoJugadoresWrapper>
-                                <PartidoAlineacionesEquipoJugadoresTitulo>
-                                    DT: {dt_local}
-                                </PartidoAlineacionesEquipoJugadoresTitulo>
-                            </> : (
-                                <>
-                                <PartidoAlineacionesEquipoJugadoresTitulo>
-                                    Alineación titular
-                                </PartidoAlineacionesEquipoJugadoresTitulo>
-                                <PartidoAlineacionesEquipoJugadoresWrapper>
-                                {
-                                    alineacion_visita
-                                    .filter((a) => a.condicion === "T")
-                                    .map((a) => (
-                                        <PartidoAlineacionesEquipoJugador>
-                                            <PartidoAlineacionesEquipoJugadorNombreWrapper>
-                                                <img src={`${URL_IMAGES}jugadores/player-default.png`} />
-                                                <span>{a.dorsal}</span>
-                                                <PartidoAlineacionesEquipoJugadorNombre>
-                                                    <div>
-                                                        {a.nacionalidad && <img src={`${URL_IMAGES}banderas/${a.nacionalidad}.png`} />}
-                                                        {
-                                                            a.id_jugador ? <NavLink to={`/jugadores/${a.id_jugador}`}>
-                                                                {a.nombre_completo}
-                                                            </NavLink> 
-                                                            : <span>{a.nombre_completo}</span>
-                                                        }                                               
-                                                    </div>
-                                                    <p>{a.posicion}</p>
-                                                </PartidoAlineacionesEquipoJugadorNombre>
-                                                
-                                            </PartidoAlineacionesEquipoJugadorNombreWrapper>
-                                            <PartidoAlineacionesEquipoJugadorIncidencias>
-                                                {(() => {
-                                                    // Filtramos las incidencias del jugador (ajusta la condición según tus datos)
-
-                                                    const golesJugador = goles?.filter((c) => 
-                                                        (a.id_jugador ? c.id_jugador === a.id_jugador : c.dorsal === a.dorsal) 
-                                                        && c.id_equipo === id_equipo_visita
-                                                    );
-                                                    
-                                                    return golesJugador.map((incidencia, index) => (
-                                                        <PartidoAlineacionesEquipoJugadorIncidencia key={index}>
-                                                            <div>
-                                                                <PiSoccerBallFill />
-                                                            </div>
-                                                        </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                    ));
-                                                })()}
-                                                {(() => {
-                                                    // Filtramos las incidencias del jugador (ajusta la condición según tus datos)
-                                                    const rojasJugador = rojas?.filter((c) => 
-                                                        (a.id_jugador ? c.id_jugador === a.id_jugador : c.dorsal === a.dorsal) 
-                                                        && c.id_equipo === id_equipo_rival
-                                                    );
-                                                    return rojasJugador.map((incidencia, index) => (
-                                                        <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='roja'>
-                                                            <div>
-                                                                <TbRectangleVerticalFilled />
-                                                            </div>
-                                                        </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                    ));
-                                                })()}
-                                                {(() => {
-                                                    // Filtramos las incidencias del jugador basándonos en la existencia de id_jugador
-                                                    const cambioJugador = cambios?.filter((c) => 
-                                                        (a.id_jugador ? c.id_jugador_entrante === a.id_jugador : c.dorsal_entrante === a.dorsal) 
-                                                        && c.id_equipo === id_equipo_visita
-                                                    );
-
-                                                    return cambioJugador?.map((c, index) => (
-                                                        <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='cambio_entra'>
-                                                            <p>{c.minuto}'</p>
-                                                            <div>
-                                                                <HiArrowLeftCircle />
-                                                            </div>
-                                                        </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                    ));
-                                                })()}
-                                                {(() => {
-                                                    // Filtramos las incidencias del jugador basándonos en la existencia de id_jugador
-                                                    const cambioJugador = cambios?.filter((c) => 
-                                                        (a.id_jugador ? c.id_jugador_saliente === a.id_jugador : c.dorsal_saliente === a.dorsal) 
-                                                        && c.id_equipo === id_equipo_visita
-                                                    );                                                    
-
-                                                    return cambioJugador?.map((c, index) => (
-                                                        <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='cambio_sale'>
-                                                            <p>{c.minuto}'</p>
-                                                            <div>
-                                                                <HiArrowLeftCircle />
-                                                            </div>
-                                                        </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                    ));
-                                                })()}
-
-                                            </PartidoAlineacionesEquipoJugadorIncidencias>
-
-                                        </PartidoAlineacionesEquipoJugador>
-                                    ))
-                                }
-                                </PartidoAlineacionesEquipoJugadoresWrapper>                                
-                                <PartidoAlineacionesEquipoJugadoresTitulo>
-                                    Suplentes
-                                </PartidoAlineacionesEquipoJugadoresTitulo>
-                                <PartidoAlineacionesEquipoJugadoresWrapper>
-                                    {
-                                        alineacion_visita
-                                        .filter((a) => a.condicion !== "T")
-                                        .map((a) => (
-                                            <PartidoAlineacionesEquipoJugador>
-                                                <PartidoAlineacionesEquipoJugadorNombreWrapper>
-                                                    <img src={`${URL_IMAGES}jugadores/player-default.png`} />
-                                                    <span>{a.dorsal}</span>
-                                                    <PartidoAlineacionesEquipoJugadorNombre>
-                                                        <div>
-                                                            {a.nacionalidad && <img src={`${URL_IMAGES}banderas/${a.nacionalidad}.png`} />}
-                                                            {
-                                                                a.id_jugador ? <NavLink to={`/jugadores/${a.id_jugador}`}>
-                                                                    {a.nombre_completo}
-                                                                </NavLink> 
-                                                                : <span>{a.nombre_completo}</span>
-                                                            }                                               
-                                                        </div>
-                                                        <p>{a.posicion}</p>
-                                                    </PartidoAlineacionesEquipoJugadorNombre>
-                                                    
-                                                </PartidoAlineacionesEquipoJugadorNombreWrapper>
-                                                <PartidoAlineacionesEquipoJugadorIncidencias>
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador (ajusta la condición según tus datos)
-
-                                                        const golesJugador = goles?.filter((c) => 
-                                                            (a.id_jugador ? c.id_jugador === a.id_jugador : c.dorsal === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_visita
-                                                        );
-                                                        
-                                                        return golesJugador.map((incidencia, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index}>
-                                                                <div>
-                                                                    <PiSoccerBallFill />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador (ajusta la condición según tus datos)
-                                                        const rojasJugador = rojas?.filter((c) => 
-                                                            (a.id_jugador ? c.id_jugador === a.id_jugador : c.dorsal === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_visita
-                                                        );                                                        return rojasJugador?.map((incidencia, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='roja'>
-                                                                <div>
-                                                                    <TbRectangleVerticalFilled />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador basándonos en la existencia de id_jugador
-                                                        const cambioJugador = cambios?.filter((c) => 
-                                                            (a.id_jugador && a.id_equipo !== 66 ? c.id_jugador_entrante === a.id_jugador : c.dorsal_entrante === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_visita
-                                                        );
-
-                                                        return cambioJugador?.map((c, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='cambio_entra'>
-                                                                <p>{c.minuto}'</p>
-                                                                <div>
-                                                                    <HiArrowLeftCircle />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                    {(() => {
-                                                        // Filtramos las incidencias del jugador basándonos en la existencia de id_jugador
-                                                        const cambioJugador = cambios?.filter((c) => 
-                                                            (a.id_jugador && a.id_equipo !== 66 ? c.id_jugador_saliente === a.id_jugador : c.dorsal_saliente === a.dorsal) 
-                                                            && c.id_equipo === id_equipo_visita
-                                                        );                                                    
-
-                                                        return cambioJugador?.map((c, index) => (
-                                                            <PartidoAlineacionesEquipoJugadorIncidencia key={index} className='cambio_sale'>
-                                                                <p>{c.minuto}'</p>
-                                                                <div>
-                                                                    <HiArrowLeftCircle />
-                                                                </div>
-                                                            </PartidoAlineacionesEquipoJugadorIncidencia>
-                                                        ));
-                                                    })()}
-                                                </PartidoAlineacionesEquipoJugadorIncidencias>
-
-                                            </PartidoAlineacionesEquipoJugador>
-                                        ))
-                                    }
-                                </PartidoAlineacionesEquipoJugadoresWrapper>
-                                <PartidoAlineacionesEquipoJugadoresTitulo>
-                                    DT: {dt_visita}
-                                </PartidoAlineacionesEquipoJugadoresTitulo>
-                            </>)}
-                        </PartidoAlineacionesEquipoJugadores>
-                    </PartidoAlineacionesEquipo>
-                </PartidoAlineacionesWrapper>
+                    </PartidoDetallesInformacionMobile>
+                    {/* Switch equipos */}
+                    <PartidoAlineacionesWrapper>
+                        <PartidoAlineacionesEquipo>
+                            {/* Switch de equipos con animación */}
+                            <PartidoAlineacionesEquipoTituloWrapper>
+                                <PartidoAlineacionesEquipoTitulo>{/* Indicador animado debajo de la opción seleccionada */}
+                                    <PartidoAlineacionesEquipoTituloSwitch 
+                                        className="switch-indicator"
+                                        initial={{ x: equipoSeleccionado === "local" ? "0%" : "100%" }}
+                                        animate={{ x: equipoSeleccionado === "local" ? "0%" : "100%" }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                    <PartidoAlineacionesEquipoNombre 
+                                        className={equipoSeleccionado === "local" ? "active" : ""}
+                                        onClick={() => setEquipoSeleccionado("local")}
+                                    >
+                                        <img src={`${URL_IMAGES}escudos/${escudo_local}`} />
+                                        <p>{nombre_local}</p>
+                                    </PartidoAlineacionesEquipoNombre>
+                                    <PartidoAlineacionesEquipoNombre 
+                                    className={equipoSeleccionado === "visitante" ? "active" : ""}
+                                    onClick={() => setEquipoSeleccionado("visitante")}
+                                    >
+                                        <img src={`${URL_IMAGES}escudos/${escudo_visita}`} />
+                                        <p>{nombre_visita}</p>
+                                    </PartidoAlineacionesEquipoNombre>
+                                </PartidoAlineacionesEquipoTitulo>
+                            </PartidoAlineacionesEquipoTituloWrapper>
+                        </PartidoAlineacionesEquipo>
+                    </PartidoAlineacionesWrapper>
+                    {/* ALineaciones del partido */}
+                    <PartidoAlineaciones 
+                        id_partido={id_partido} 
+                        id_equipo={equipoSeleccionado === "local" ? id_equipo_local : id_equipo_visita}
+                        dt={equipoSeleccionado === "local" ? dt_local : dt_visita}
+                    />
+                </PartidoWrapperLeft>
+                <PartidoWrapperRight>
+                    {
+                        link && <iframe 
+                            src={link}
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" 
+                            allowfullscreen>
+                        </iframe>
+                    }
+                    {/* <video controls width="100%">
+                    <source src={`${URL_VIDEOS}video.mp4`} type="video/mp4" />
+                    Tu navegador no soporta la reproducción de video.
+                    </video> */}
+                </PartidoWrapperRight>
             </PartidoWrapper>
         </PartidoContainer>
     );

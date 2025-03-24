@@ -32,7 +32,7 @@ export const GlobalStyles = createGlobalStyle`
         --import: #6366F1;
         --export: #A855F7;
 
-        
+        --border: solid 1px #f0f0f0;
     }
     
 
