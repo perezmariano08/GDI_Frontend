@@ -1,131 +1,178 @@
-import React, { useState } from 'react'
-import { EquipoBodyTemplate, PartidosContainer, PartidosDataTable, PartidosWrapper, ResultadoBodyTemplate } from './PartidosStyles'
-import { usePartidos } from '../../hooks/api/usePartidos';
-import { Column } from 'primereact/column';
-import { FilterMatchMode } from 'primereact/api';
-import { URL_IMAGES } from '../../utils/constants';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useEffect, useState } from 'react';
+import {
+    PartidosContainer,
+    PartidosDropdownContainer,
+    PartidosDropdownWrapper,
+    PartidosMesesContainer,
+    PartidosWrapper,
+} from './PartidosStyles';
+
+import { usePartidos, usePartidosAñoMes } from '../../api/partidos/usePartidos';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import CardPartido2 from '../../components/Cards/CardPartido2/CardPartido2';
+import Dropdown from '../../components/UI/Dropdown/Dropdown';
+import useForm from '../../hooks/useForm';
 
 const Partidos = () => {
-    const { data: partidos, error, isLoading } = usePartidos();
-    const navigate = useNavigate();  // Hook para la navegación
+    // const { data: partidos, error, isLoading } = usePartidos();
+    
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
-    const [filters, setFilters] = useState({
-        nombre_equipo: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        dia_formateado: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-        temporada: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-        resultado: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-        condicion: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-        estadio: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    });
+    const today = new Date();
+    const añoActual = today.getFullYear().toString();
+    const mesActual = (today.getMonth() + 1).toString(); // getMonth() es 0-indexad
+    const añoURL = searchParams.get('año');
+    const mesURL = searchParams.get('mes');
 
-    const [globalFilterValue, setGlobalFilterValue] = useState('');
+    const [añoSeleccionado, setAñoSeleccionado] = useState(añoURL || añoActual);
+    const [mesSeleccionado, setMesSeleccionado] = useState(mesURL || mesActual);
 
-    const columns = [
-        { 
-            field: 'dia_formateado', 
-            header: 'Día', 
-            body: (rowData) => <span>{rowData.dia_formateado}</span> 
-        },
-        { 
-            field: 'temporada', 
-            header: 'Temporada', 
-            body: (rowData) => <span>{rowData.temporada}</span> 
-        },
-        { 
-            field: 'condicion', 
-            header: 'Condición', 
-            body: (rowData) => <span>{rowData.condicion}</span> 
-        },
-        {
-            field: 'resultado',
-            header: '',
-            body: (rowData) => {
-                // Determina la clase según el resultado
-                const resultadoClass = rowData.goles_iacc > rowData.goles_rival 
-                    ? 'ganado' 
-                    : rowData.goles_iacc === rowData.goles_rival 
-                        ? 'empate' 
-                        : 'perdido';
-        
-                return (
-                    <ResultadoBodyTemplate>
-                        <div className={`${resultadoClass}`}>
-                            {rowData.resultado}
-                        </div>
-                    </ResultadoBodyTemplate>
-                );
-            },
-            style: { 
-                maxWidth: '100px',
-            },
-        },
-        { 
-            field: 'nombre_equipo', 
-            header: 'Rival', 
-            body: (rowData) => <EquipoBodyTemplate>
-                <img src={`${URL_IMAGES}escudos/${rowData.escudo}`} />
-                {rowData.nombre_equipo}
-            </EquipoBodyTemplate>,
-            bodyStyle: { textAlign: 'center', whiteSpace: 'nowrap' }, // Ajusta el ancho al contenido
-            style: { minWidth: '250px' } // Permite que la columna tome solo el espacio necesario
-        },
-        { 
-            field: 'estadio', 
-            header: 'Estadio', 
-            body: (rowData) => <span>{rowData.estadio}</span>,
-            style: { 
-                minWidth: '400px',
-            },
-        },
+    const { data: partidos, error, isLoading } = usePartidosAñoMes(añoSeleccionado, mesSeleccionado);
+    
+    useEffect(() => {
+        if (añoURL) {
+            setAñoSeleccionado(añoURL) 
+        } else setAñoSeleccionado(añoActual);
+        if (mesURL) {
+            setMesSeleccionado(mesURL);
+        } else setMesSeleccionado(mesActual)
+    }, [añoURL, mesURL]);
+
+    const actualizarURL = (año, mes) => {
+        const params = new URLSearchParams();
+        if (año) params.set('año', año);
+        if (mes) params.set('mes', mes);
+        navigate({ search: params.toString() });
+        // 🔄 Fuerza recarga del componente
+        navigate(0); 
+    };
+    
+    const meses = [
+        { label: 'Ene', value: '1' },
+        { label: 'Feb', value: '2' },
+        { label: 'Mar', value: '3' },
+        { label: 'Abr', value: '4' },
+        { label: 'May', value: '5' },
+        { label: 'Jun', value: '6' },
+        { label: 'Jul', value: '7' },
+        { label: 'Ago', value: '8' },
+        { label: 'Sep', value: '9' },
+        { label: 'Oct', value: '10' },
+        { label: 'Nov', value: '11' },
+        { label: 'Dic', value: '12' },
     ];
 
-    // Función para manejar el clic en la fila
-    const handleRowClick = (rowData) => {
-        // Navegar a la página de detalles del partido
-        navigate(`/partidos/${rowData.ruta_equipos}/${rowData.id_partido}`);
-    };
+    const años = [
+        { label: '2025', value: '2025' },
+        { label: '2024', value: '2024' },
+        { label: '2023', value: '2023' },
+        { label: '2022', value: '2022' },
+        { label: '2021', value: '2021' },
+        { label: '2020', value: '2020' },
+        { label: '2019', value: '2019' },
+        { label: '2018', value: '2018' },
+        { label: '2017', value: '2017' },
+        { label: '2016', value: '2016' },
+        { label: '2015', value: '2015' },
+        { label: '2014', value: '2014' },
+        { label: '2013', value: '2013' },
+        { label: '2012', value: '2012' },
+        { label: '2011', value: '2011' },
+        { label: '2010', value: '2010' },
+        { label: '2009', value: '2009' },
+        { label: '2008', value: '2008' },
+        { label: '2007', value: '2007' },
+        { label: '2006', value: '2006' },
+        { label: '2005', value: '2005' },
+        { label: '2004', value: '2004' },
+        { label: '2003', value: '2003' },
+        { label: '2002', value: '2002' },
+        { label: '2001', value: '2001' },
+        { label: '2000', value: '2000' },
+        { label: '1999', value: '1999' },
+        { label: '1998', value: '1998' },
+        { label: '1997', value: '1997' },
+        { label: '1996', value: '1996' },
+        { label: '1995', value: '1995' },
+        { label: '1994', value: '1994' },
+        { label: '1993', value: '1993' },
+        { label: '1992', value: '1992' },
+        { label: '1991', value: '1991' },
+        { label: '1990', value: '1990' },
+        { label: '1989', value: '1989' },
+        { label: '1988', value: '1988' },
+        { label: '1987', value: '1987' },
+        { label: '1986', value: '1986' },
+        { label: '1985', value: '1985' },
+        { label: '1984', value: '1984' },
+        { label: '1983', value: '1983' },
+        { label: '1982', value: '1982' },
+        { label: '1981', value: '1981' },
+        { label: '1980', value: '1980' },
+        { label: '1979', value: '1979' },
+        { label: '1973', value: '1973' },
+        { label: '1970', value: '1970' },
+    ];
+
+
+    // const años = [...new Set(partidos?.map(p => p.año))].sort((a, b) => b - a);
+    const partidosFiltrados = partidos?.filter((p) => p.año == añoSeleccionado && p.mes == mesSeleccionado)
+
+    // Manejo del form
+    const [formState, handleFormChange, resetForm, setFormState] = useForm({ 
+        año: añoSeleccionado || '',
+
+    });   
+
 
     return (
         <PartidosContainer>
-            <PartidosWrapper>
-                {/* Muestra un mensaje de carga o error sin salir de la función */}
-                {error && <p>Error: {error.message}</p>}
+            <PartidosDropdownContainer>
+                <PartidosDropdownWrapper>
+                    <Dropdown
+                        // name="año" // <--- esto es clave
+                        value={añoSeleccionado || ""}
+                        onChange={(e) => actualizarURL(e.target.value, mesSeleccionado)}
+                        options={años}
+                        optionLabel="label"
+                        optionValue="value"
+                    />
+                </PartidosDropdownWrapper>
+            </PartidosDropdownContainer>
+            <PartidosMesesContainer>
+                {meses.map((mes) => {
+                    const params = new URLSearchParams();
+                    if (añoSeleccionado) params.set('año', añoSeleccionado);
+                    params.set('mes', mes.value);
 
-                {!error && (
-                    <>
-                        <PartidosDataTable
-                            scrollable 
-                            scrollWidth="400px"
-                            dataKey="id_partido"
-                            emptyMessage="No se encontraron partidos."
-                            removableSort
-                            loading={isLoading}
-                            paginator 
-                            rows={100} 
-                            filters={filters}
-                            globalFilterFields={['nombre_equipo', 'dia_formateado']} 
-                            filterDisplay="row" 
-                            rowsPerPageOptions={[100, 200, 500]} 
-                            value={partidos} 
-                            onRowClick={(e) => handleRowClick(e.data)} // Añadir el evento onRowClick
+                    const isSelected = mesSeleccionado === mes.value;
+
+                    return (
+                        <a
+                        key={mes.value}
+                        href={`?${params.toString()}`}
+                        className={isSelected && 'active' }
                         >
-                            {columns.map((col) => (
-                                <Column
-                                    filter
-                                    bodyStyle={col.bodyStyle}
-                                    style={col.style}
-                                    // filterPlaceholder="Buscar rival"
-                                    sortable={col.sortable} 
-                                    key={col.field} 
-                                    field={col.field}
-                                    header={col.header}
-                                    body={col.body} 
-                                />
-                            ))}
-                        </PartidosDataTable>
+                        {mes.label}
+                        </a>
+                    );
+                    })}
+
+
+            </PartidosMesesContainer>
+            <PartidosWrapper>
+                {
+                    !isLoading && <>
+                        {
+                            partidosFiltrados?.length > 0 ? <>
+                                {partidosFiltrados?.map((partido) => (
+                                    <CardPartido2 key={partido.id_partido} partido={partido} />
+                                ))}
+                            </> : <p>No se encontraron partidos que coincidan con los criterios seleccionados</p>
+                        }
                     </>
-                )}
+                }
             </PartidosWrapper>
         </PartidosContainer>
     );

@@ -1,22 +1,27 @@
 import React, { useState } from 'react'
 import { NavLink, useParams, useSearchParams } from 'react-router-dom';
-import { PartidoAlineacionesEquipo, PartidoAlineacionesEquipoJugador, PartidoAlineacionesEquipoJugadores, PartidoAlineacionesEquipoJugadoresTitulo, PartidoAlineacionesEquipoJugadoresWrapper, PartidoAlineacionesEquipoJugadorIncidencia, PartidoAlineacionesEquipoJugadorIncidencias, PartidoAlineacionesEquipoJugadorNombre, PartidoAlineacionesEquipoJugadorNombreWrapper, PartidoAlineacionesEquipoNombre, PartidoAlineacionesEquipoTitulo, PartidoAlineacionesEquipoTituloSwitch, PartidoAlineacionesEquipoTituloWrapper, PartidoAlineacionesWrapper, PartidoContainer, PartidoDetallesArbitroEstadio, PartidoDetallesEquipo, PartidoDetallesEquipos, PartidoDetallesFecha, PartidoDetallesGoles, PartidoDetallesGolesEquipo, PartidoDetallesGolesIcono, PartidoDetallesInformacionMobile, PartidoDetallesResultado, PartidoDetallesRojasIcono, PartidoDetallesWrapper, PartidoInformacionAdicionalItem, PartidoInformacionAdicionalWrapper, PartidoNavegador, PartidoWrapper, PartidoWrapperLeft, PartidoWrapperRight } from './PartidoStyles';
+import { PartidoAlineacionesEquipo, PartidoAlineacionesEquipoNombre, PartidoAlineacionesEquipoTitulo, PartidoAlineacionesEquipoTituloSwitch, PartidoAlineacionesEquipoTituloWrapper, PartidoAlineacionesWrapper, PartidoContainer, 
+    PartidoDetallesEquipo, PartidoDetallesEquipos, PartidoDetallesGoles, PartidoDetallesGolesEquipo, PartidoDetallesGolesIcono, PartidoDetallesResultado, PartidoDetallesRojasIcono, PartidoDetallesWrapper, PartidoGaleria, PartidoHistorialEquipo, PartidoHistorialEquipos, PartidoHistorialLink, PartidoHistorialTitulo, PartidoHistorialWrapper, PartidoImagenesTitulo, PartidoImagenesWrapper, PartidoInfo, PartidoMetadata, PartidoMetadataMobile, PartidoNota, PartidoVideo, PartidoVideoTitulo, PartidoVideoWrapper, PartidoWrapper, PartidoWrapperLeft, PartidoWrapperRight } from './PartidoStyles';
 import { URL_IMAGES, URL_VIDEOS } from '../../utils/constants';
 import { PiSoccerBallFill } from "react-icons/pi";
-import { formatearFecha } from '../../utils/formatearFecha';
-import { HiArrowLeftCircle, HiArrowRightCircle } from "react-icons/hi2";
+import { formatearDDMM, formatearFecha, formatearFechaImagenesPartido } from '../../utils/formatearFecha';
 import { TbRectangleVerticalFilled } from "react-icons/tb";
-import { usePartido, usePartidoAlineaciones, usePartidoCambios, usePartidosIncidencias } from '../../hooks/api/usePartidos';
+import { usePartido, usePartidoImagenes, usePartidosIncidencias, usePartidosRival } from '../../api/partidos/usePartidos';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import PartidoMenu from './PartidoMenu';
-import { motion } from "framer-motion";
 import { GiWhistle } from "react-icons/gi";
 import { MdOutlineStadium } from "react-icons/md";
 import { TbSoccerField } from "react-icons/tb";
 import { HiOutlineTrophy } from "react-icons/hi2";
 import { IoIosArrowBack, IoMdCalendar } from "react-icons/io";
 import PartidoAlineaciones from './PartidoAlineaciones';
+import { formatearSlugEquipo, formatearSlugJugador, formatearSlugPartido } from '../../utils/utils';
+import { Galleria } from 'primereact/galleria';
+import PartidoCampaña from './PartidoCampaña';
+import { BiFootball } from 'react-icons/bi';
+import { FaAngleRight } from 'react-icons/fa6';
+import { formatearHora } from '../../utils/formatearHora';
 
 
 const Partido = () => {
@@ -25,47 +30,32 @@ const Partido = () => {
     const id_partido = parseInt(useParams().id_partido, 10);
     const { data: partido, error, isLoading: partidoLoading} = usePartido(id_partido);
     // Desestructuración de partido
-    const {
-        condicion,
-        estado,
-        nombre_equipo,
-        escudo_equipo,
-        goles_iacc,
-        goles_rival,
-        dt_rival,
-        dt_iacc,
-        fase,
-        jornada,
-        torneo,
-        temporada,
-        arbitro,
-        estadio,
-        dia,
-        hora,
-        id_equipo_rival,
-        link
+    const { estado, fase, interzonal, condicion, sub_torneo, nota, nombre_torneo, equipo_local, equipo_visita, jornada, torneo, temporada, arbitro, estadio, dia, hora, link, id_equipo_local, escudo_local, goles_local, nombre_local, dt_local, id_equipo_visita, escudo_visita, goles_visita, nombre_visita, dt_visita, penales_local, penales_visita       
     } = partido || []
 
-    const { data: alineaciones, error: alineacionesError, isLoading: alineacionesLoading} = usePartidoAlineaciones(id_partido);
     const { data: incidencias, isLoading: incidenciasLoading} = usePartidosIncidencias(id_partido);
-    const { data: cambios, isLoading: cambiosLoading} = usePartidoCambios(id_partido);
     const goles = incidencias?.filter((i) => i.tipo === "G") || [];
-    const amarillas = incidencias?.filter((i) => i.tipo === "A") || [];
     const rojas = incidencias?.filter((i) => i.tipo === "R") || [];
     const [equipoSeleccionado, setEquipoSeleccionado] = useState("local"); // Estado inicial
 
-    const id_equipo_local = condicion === "V" ?  id_equipo_rival : 66
-    const id_equipo_visita = condicion !== "V" ?  id_equipo_rival : 66
-    const escudo_local = condicion === "V" ?  escudo_equipo : "instituto.png"
-    const escudo_visita = condicion !== "V" ?  escudo_equipo : "instituto.png"
-    const goles_local = condicion === "V" ?  goles_rival : goles_iacc
-    const goles_visita = condicion !== "V" ?  goles_rival : goles_iacc
-    const nombre_local = condicion === "V" ?  nombre_equipo : "Instituto ACC"
-    const nombre_visita = condicion !== "V" ?  nombre_equipo : "Instituto ACC"
-    const alineacion_local = condicion === "V" ?  alineaciones?.filter((a) => a.id_equipo === id_equipo_rival) || [] : alineaciones?.filter((a) => a.id_equipo === 66) || []
-    const alineacion_visita = condicion !== "V" ?  alineaciones?.filter((a) => a.id_equipo === id_equipo_rival) || [] : alineaciones?.filter((a) => a.id_equipo === 66) || []
-    const dt_local = condicion === "V" ?  dt_rival : dt_iacc
-    const dt_visita = condicion !== "V" ?  dt_rival : dt_iacc
+    
+    const { data: imagenes, isLoading: imagenesLoading} = usePartidoImagenes(id_partido);
+    const id_equipo_rival = condicion === "V" ? id_equipo_local : id_equipo_visita
+    const { data: historial, isLoading: historialLoading } = usePartidosRival(id_equipo_rival);
+
+    console.log(historial);
+    
+    const caption = (item) => {
+        if (item.descripcion) {
+            return <p>{item.descripcion}</p>;
+        }
+        return <p>{formatearFecha(item.dia)}</p>; // No muestra el caption si no hay descripción
+    };
+
+    const itemTemplate = (item) => {
+        return <img src={`${URL_IMAGES}partidos/${item.src}`} alt={item.alt} />;
+    }
+
     
     
     // Skeleton
@@ -73,88 +63,112 @@ const Partido = () => {
         return (
             <PartidoContainer>
                 <PartidoWrapper>
-                    <PartidoDetallesWrapper>
-                        <PartidoDetallesFecha>
-                            <Skeleton width={150} height={10}/>
-                            <Skeleton width={150} height={10}/>
-                        </PartidoDetallesFecha>
-                        <PartidoDetallesArbitroEstadio>
-                            <Skeleton width={50} height={10}/>
-                            <Skeleton width={50} height={10}/>
-                            <Skeleton width={50} height={10}/>
-                        </PartidoDetallesArbitroEstadio>
-                        <PartidoDetallesEquipos>
-                            <PartidoDetallesEquipo>
-                                <NavLink>
-                                    <Skeleton width={100} height={20}/>
-                                    <Skeleton width={40} height={40} borderRadius={'100%'}/>
-                                </NavLink>
-                            </PartidoDetallesEquipo>
-                            <PartidoDetallesResultado>
-                                <Skeleton width={60} height={24}/>
-                                <Skeleton width={80} height={14}/>
-                            </PartidoDetallesResultado>
-                            <PartidoDetallesEquipo className='visitante'>
-                                <NavLink>
-                                    <Skeleton width={100} height={20}/>
-                                    <Skeleton width={40} height={40} borderRadius={'100%'}/>
-                                </NavLink>
-                            </PartidoDetallesEquipo>
-                        </PartidoDetallesEquipos>
-                    </PartidoDetallesWrapper>
+                    <PartidoWrapperLeft>
+                        <PartidoDetallesWrapper>
+                            <PartidoInfo>
+                                <p><Skeleton width={150} height={10}/></p>
+                                <p><Skeleton width={150} height={10}/></p>
+                            </PartidoInfo>
+                            <PartidoMetadata>
+                                <div className="item">
+                                    <p><Skeleton width={80} height={10}/></p>
+                                </div>
+                                <div className="item">
+                                    <p><Skeleton width={80} height={10}/></p>
+                                </div>
+                                <div className="item">
+                                    <p><Skeleton width={80} height={10}/></p>
+                                </div>
+                            </PartidoMetadata>
+                            <PartidoDetallesEquipos>
+                                <PartidoDetallesEquipo>
+                                    <NavLink>
+                                        <span><Skeleton width={100} height={20}/></span>
+                                        <Skeleton width={40} height={40} borderRadius={'100%'}/>
+                                    </NavLink>
+                                </PartidoDetallesEquipo>
+                                <PartidoDetallesResultado>
+                                    <p><Skeleton width={60} height={24}/></p>
+                                    <span><Skeleton width={55} height={12}/></span>
+                                </PartidoDetallesResultado>
+                                <PartidoDetallesEquipo className='visitante'>
+                                    <NavLink>
+                                        <span><Skeleton width={100} height={20}/></span>
+                                        <Skeleton width={40} height={40} borderRadius={'100%'}/>
+                                    </NavLink>
+                                </PartidoDetallesEquipo>
+                            </PartidoDetallesEquipos>
+                        </PartidoDetallesWrapper>
+                    </PartidoWrapperLeft>
+                    <PartidoWrapperRight>
+                        
+                    </PartidoWrapperRight>
                 </PartidoWrapper>
             </PartidoContainer>
         );
     }    
 
-    console.log(goles);
+    console.log(equipoSeleccionado);
     
 
     return (
         <PartidoContainer>
             <PartidoWrapper>
                 <PartidoWrapperLeft>
-                    {/* <PartidoNavegador>
-                        <div className="arrow">
-                            <IoIosArrowBack />
-                        </div>
-                        Volver
-                    </PartidoNavegador> */}
-                    {/* Detalles del partido */}
-                    <PartidoDetallesWrapper className={estado === "S" && 'suspendido'}>
-                        <PartidoDetallesFecha>
-                            <p>{torneo} {temporada}</p>
-                            <p>{fase && `${fase} |`} {jornada}</p>
-                        </PartidoDetallesFecha>
-                        <PartidoDetallesArbitroEstadio>
+                    <PartidoDetallesWrapper>
+                        <PartidoInfo>
+                            <p>
+                                {nombre_torneo ? `${nombre_torneo}` : `${torneo} ${temporada}`} 
+                                {sub_torneo && ` | ${sub_torneo}`} 
+                            </p>
+                            <p>
+                                {interzonal === "S" ? `${jornada} (Interzonal)` : `${fase ? `${fase}${jornada && ` | ${jornada}`}` : `${jornada}`}`}  </p>
+                        </PartidoInfo>
+                        <PartidoMetadata>
                             <div className="item">
                                 <IoMdCalendar />
-                                <p>{formatearFecha(dia)}</p>
+                                <p>{dia ? formatearFecha(dia) : 'A confirmar'}</p>
                             </div>
                             <div className="item">
                                 <GiWhistle />
-                                <p>{arbitro}</p>
+                                <p>{arbitro ? arbitro : 'Sin definir'}</p>
                             </div>
                             <div className="item">
                                 <TbSoccerField />
-                                <p>{estadio}</p>
+                                <p>{estadio ? estadio : 'Sin definir'}</p>
                             </div>
-                        </PartidoDetallesArbitroEstadio>
+                        </PartidoMetadata>
                         <PartidoDetallesEquipos>
                             <PartidoDetallesEquipo>
-                                <NavLink to={`/equipos/${id_equipo_local}`}>
-                                    <span>{nombre_local}</span>
+                                <NavLink to={`/equipos/${formatearSlugEquipo(equipo_local)}/${id_equipo_local}`}>
+                                    <h3>{equipo_local}</h3>
                                     <img src={`${URL_IMAGES}escudos/${escudo_local}`} />
                                 </NavLink>
                             </PartidoDetallesEquipo>
                             <PartidoDetallesResultado>
-                                <span>{`${goles_local} - ${goles_visita}`}</span>
-                                {estado === "F" && <p>Finalizado</p>}
-                                {estado === "S" && <p>Suspendido</p>}
+                                {
+                                    estado === "F" ? <>
+                                    <strong>{`${goles_local} - ${goles_visita}`}</strong>
+                                        {
+                                            penales_local 
+                                            ? <strong className='penales'>{`Pen: ${penales_local}-${penales_visita}`}</strong>
+                                            : <>
+                                                {estado === "F" && <p>Finalizado</p>}
+                                                
+                                            </>
+                                        }
+                                    </>
+                                    : <>
+                                        <strong>{hora ? `${formatearHora(hora)}` : '-'}</strong>
+                                        <p>{dia ? formatearDDMM(dia) : 'A confirmar'}</p>
+                                        {estado === "S" && <p>Suspendido</p>}
+                                    </>
+                                }
+                                
                             </PartidoDetallesResultado>
                             <PartidoDetallesEquipo className="visitante">
-                                <NavLink to={`/equipos/${id_equipo_visita}`}>
-                                    <span>{nombre_visita}</span>
+                                <NavLink to={`/equipos/${formatearSlugEquipo(equipo_visita)}/${id_equipo_visita}`}>
+                                    <h3>{equipo_visita}</h3>
                                     <img src={`${URL_IMAGES}escudos/${escudo_visita}`} />
                                 </NavLink>
                             </PartidoDetallesEquipo>                        
@@ -183,7 +197,7 @@ const Partido = () => {
                                 </PartidoDetallesGolesEquipo>
 
                                 <PartidoDetallesGolesIcono>
-                                    <PiSoccerBallFill />
+                                    <BiFootball />
                                 </PartidoDetallesGolesIcono>
 
                                 {/* Goles del equipo visitante (incluye autogoles del local) */}
@@ -234,8 +248,9 @@ const Partido = () => {
                                 </PartidoDetallesGolesEquipo>
                             </PartidoDetallesGoles>
                         )}
+                        {/* <PartidoMenu slug={formatearSlugPartido(nombre_local, nombre_visita)} id_partido={id_partido}/> */}
                     </PartidoDetallesWrapper>
-                    <PartidoDetallesInformacionMobile>
+                    <PartidoMetadataMobile>
                         <div className="item">
                             <IoMdCalendar />
                             <p>{formatearFecha(dia)}</p>
@@ -248,7 +263,9 @@ const Partido = () => {
                             <TbSoccerField />
                             <p>{estadio}</p>
                         </div>
-                    </PartidoDetallesInformacionMobile>
+                    </PartidoMetadataMobile>
+                    {estado === "S" && <PartidoNota><p>{nota}</p></PartidoNota>}
+
                     {/* Switch equipos */}
                     <PartidoAlineacionesWrapper>
                         <PartidoAlineacionesEquipo>
@@ -282,25 +299,88 @@ const Partido = () => {
                     {/* ALineaciones del partido */}
                     <PartidoAlineaciones 
                         id_partido={id_partido} 
+                        incidencias={incidencias}
                         id_equipo={equipoSeleccionado === "local" ? id_equipo_local : id_equipo_visita}
                         dt={equipoSeleccionado === "local" ? dt_local : dt_visita}
                     />
+                    {
+                        imagenes?.length > 0 && <PartidoImagenesWrapper>
+                            <PartidoImagenesTitulo>
+                                <h3>Fotos del partido</h3>
+                            </PartidoImagenesTitulo>
+                            <PartidoGaleria 
+                                value={imagenes} 
+                                numVisible={5} 
+                                circular 
+                                showItemNavigators 
+                                showItemNavigatorsOnHover 
+                                showIndicators
+                                showThumbnails={false} 
+                                item={itemTemplate} 
+                                caption={caption}
+                            />
+                        </PartidoImagenesWrapper>
+                    }
                 </PartidoWrapperLeft>
                 <PartidoWrapperRight>
                     {
-                        link && <iframe 
-                            src={link}
-                            title="YouTube video player" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            referrerpolicy="strict-origin-when-cross-origin" 
-                            allowfullscreen>
-                        </iframe>
+                        historial?.length > 0 && <PartidoHistorialWrapper>
+                            <PartidoHistorialTitulo>
+                                <h3>Historial entre ambos ({`${historial?.length} partidos`})</h3>
+                            </PartidoHistorialTitulo>
+                            <PartidoHistorialEquipos>
+                                <PartidoHistorialEquipo>
+                                    <img src={`${URL_IMAGES}escudos/instituto.png`} />
+                                    <div className='green'>{historial?.filter((p) => p.resultado === "G").length}</div>
+                                    <span>Victorias</span>
+                                </PartidoHistorialEquipo>
+                                <PartidoHistorialEquipo>
+                                    <div>{historial?.filter((p) => p.resultado === "E").length}</div>
+                                    <span>Empates</span>
+                                </PartidoHistorialEquipo>
+                                <PartidoHistorialEquipo>
+                                    <img src={`${URL_IMAGES}escudos/${id_equipo_local === 66 ? escudo_visita : escudo_local}`} />
+                                    <div className='red'>{historial?.filter((p) => p.resultado === "P").length}</div>
+                                    <span>Victorias</span>
+                                </PartidoHistorialEquipo>
+                            </PartidoHistorialEquipos>
+                            <PartidoHistorialLink>
+                                <NavLink>
+                                    Ver historial completo
+                                    <FaAngleRight />
+                                </NavLink>
+                            </PartidoHistorialLink>
+                        </PartidoHistorialWrapper>
                     }
+                    
+                    {
+                        link && <PartidoVideoWrapper>
+                            <PartidoVideoTitulo>
+                                <h3>Video resumen</h3>
+                            </PartidoVideoTitulo>
+                            <PartidoVideo>
+                                {
+                                    link && <iframe 
+                                        src={link}
+                                        title="YouTube video player" 
+                                        frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                        referrerpolicy="strict-origin-when-cross-origin" 
+                                        allowfullscreen>
+                                    </iframe>
+                                }
+                            </PartidoVideo>
+                            
+                        </PartidoVideoWrapper>
+                    }
+                    <PartidoCampaña id_partido={id_partido} torneo={torneo} temporada={temporada}/>
                     {/* <video controls width="100%">
                     <source src={`${URL_VIDEOS}video.mp4`} type="video/mp4" />
                     Tu navegador no soporta la reproducción de video.
                     </video> */}
+
+                    
+                    
                 </PartidoWrapperRight>
             </PartidoWrapper>
         </PartidoContainer>

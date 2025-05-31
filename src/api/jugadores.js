@@ -11,3 +11,9 @@ export const fetchJugador = async (id_jugador) => {
     if (!res.ok) throw new Error("Error al cargar los datos del jugador");
     return res.json();
 };
+
+export const fetchJugadorEstadisticas = async (id_jugador) => {
+    const res = await fetch(`${URL_API}jugadores/estadisticas/${id_jugador}`);
+    if (!res.ok) throw new Error("Error al cargar los datos del jugador");
+    return res.json();
+};

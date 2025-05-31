@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { ContainerStyled, WrapperStyled } from "../../components/Templates/Templates";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
+import { Galleria } from "primereact/galleria";
 
 export const PartidoContainer = styled(ContainerStyled)``
 
@@ -20,7 +21,7 @@ export const PartidoWrapperLeft = styled.div`
     display: flex;
     gap: 20px;
     flex-direction: column;
-    width: 70%;
+    width: 67%;
     @media (max-width: 968px) {
         width: 100%;
     }
@@ -62,23 +63,12 @@ export const PartidoNavegador = styled(NavLink)`
     }
 `
 
-export const PartidoWrapperRight= styled.div`
+export const PartidoWrapperRight = styled.div`
     display: flex;
     gap: 20px;
     flex-direction: column;
-    width: 30%;
-    padding: 20px;
-    height: 1000px;
+    width: 33%;
     border-radius: 16px;
-
-    background-color: var(--black-0);
-    border: 1px solid var(--black-200);
-
-    iframe, video {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        border-radius: 16px;
-    }
 
     @media (max-width: 968px) {
         width: 100%;
@@ -102,13 +92,13 @@ export const PartidoMenuWrapper = styled.div`
     }
 `
 
-export const PartidoDetallesWrapper = styled.div`
-    background-color: var(--black-0);
-    border: 1px solid var(--black-200);
+export const PartidoDetallesWrapper = styled.article`
+    background-color: var(--white-0);
+    border: 1px solid var(--white-100);
     display: flex;
     width: 100%;
     flex-direction: column;
-    border-radius: 20px;
+    border-radius: var(--radius);
 
     &.suspendido {
         background-color: var(--black-950);
@@ -120,36 +110,34 @@ export const PartidoDetallesWrapper = styled.div`
     }
 `
 
-export const PartidoDetallesFecha = styled.div`
+export const PartidoInfo = styled.header`
     display: flex;
     justify-content: space-between;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--black-100);
+    padding: var(--padding);
+    border-bottom: var(--border);
+
     p {
         font-size: 12px;
-        font-weight: 500;
-        color: var(--black-600);
+        color: var(--black-500);
     }
 `
 
-export const PartidoDetallesArbitroEstadio = styled.div`
+export const PartidoMetadata = styled.section`
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--black-100);
+    padding: var(--padding);
+    border-bottom: var(--border);
 
     .item {
         display: flex;
         align-items: center;
         gap: 5px;
+
         p, svg {
             font-size: 12px;
-            color: var(--black-600);
-        }
-        p {
-            font-weight: 500;
+            color: var(--black-500);
         }
     }
 
@@ -158,27 +146,26 @@ export const PartidoDetallesArbitroEstadio = styled.div`
     }
 `
 
-export const PartidoDetallesInformacionMobile = styled.div`
+export const PartidoMetadataMobile = styled.div`
     flex-direction: column;
-    background-color: var(--black-0);
-    border: 1px solid var(--black-200);
+    background-color: var(--white-0);
+    border: 1px solid var(--white-100);
     width: 100%;
-    border-radius: 20px;
+    border-radius: 16px;
     gap: 20px;
     flex-wrap: wrap;
     padding: 14px 20px;
-    border-bottom: 1px solid var(--black-100);
+    border-bottom: var(--border);
     display: none;
+
     .item {
         display: flex;
         align-items: center;
         gap: 10px;
+
         p, svg {
             font-size: 12px;
-            color: var(--black-600);
-        }
-        p {
-            font-weight: 500;
+            color: var(--black-500);
         }
     }
 
@@ -187,14 +174,31 @@ export const PartidoDetallesInformacionMobile = styled.div`
     }
 `
 
-export const PartidoDetallesEquipos = styled.div`
+export const PartidoNota = styled.div`
+    display: flex;
+    background-color: var(--black-0);
+    border: 1px solid var(--black-200);
+    border-left: 6px solid var(--red);
+    width: 100%;
+    border-radius: 16px;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 14px 20px;
+    border-bottom: var(--border);
+`
+
+export const PartidoDetallesEquipos = styled.section`
     display: flex;
     width: 100%;
     justify-content: center;
     gap: 15px;
     padding: 20px;
     align-items: center;
-
+    
+    @media (max-width: 768px) {
+        padding: 25px 10px;
+        justify-content: space-between;
+    }
 `
 
 export const PartidoDetallesEquipo = styled.div`
@@ -208,19 +212,20 @@ export const PartidoDetallesEquipo = styled.div`
         display: flex;
         align-items: center;
         gap: 15px;
-        color: var(--black-900);
+        
         img {
             width: 35px;
             @media (max-width: 768px) {
-                width: 25px;
+                width: 40px;
             }
         }
 
-        span {
-            font-size: 20px;
+        h3 {
+            font-size: 24px;
             font-weight: 600;
             @media (max-width: 768px) {
-                font-size: 16px;
+                font-size: 14px;
+                text-align: center;
             }
         }
 
@@ -261,29 +266,34 @@ export const PartidoDetallesEquipo = styled.div`
     }
 
     @media (max-width: 768px) {
-        gap: 10px;
+        gap: 12px;
     }
 `
 
 export const PartidoDetallesResultado = styled.div`
     display: flex;
     flex-direction: column;
+    gap: 2px;
     align-items: center;
     min-width: 80px;
-    span {
-        font-size: 24px;
+    strong {
+        font-size: 26px;
         font-weight: 700;
+        &.penales {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--black-500);
+        }
         @media (max-width: 768px) {
-            font-size: 22px;
+            font-size: 24px;
         }
     }
 
     p {
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--black-600);
+        font-size: 12px;
+        color: var(--black-500);
         @media (max-width: 768px) {
-            font-size: 12px;
+            font-size: 10px;
         }
     }
 
@@ -317,8 +327,7 @@ export const PartidoDetallesGolesEquipo = styled.div`
 
     p {
         font-size: 12px;
-        color: var(--black-600);
-        font-weight: 500;
+        color: var(--black-500);
     }
 
     &.visitante {
@@ -334,7 +343,7 @@ export const PartidoDetallesGolesIcono = styled.div`
 
     svg {
         font-size: 12px;
-        color: var(--black-600);
+        color: var(--black-500);
     }
 
     @media (max-width: 768px) {
@@ -349,12 +358,13 @@ export const PartidoDetallesRojasIcono = styled(PartidoDetallesGolesIcono)`
 `
 
 export const PartidoAlineacionesWrapper = styled.div`
-    background-color: var(--black-0);
+    background-color: var(--white-0);
     width: 100%;
     display: flex;
     justify-content: space-between;
     border-radius: 20px;
     overflow: hidden;
+
     @media (max-width: 768px) {
         width: 100%;
         flex-direction: column;
@@ -365,7 +375,7 @@ export const PartidoAlineacionesEquipo = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    border: 1px solid var(--black-200);
+    border: 1px solid var(--white-100);
 `
 
 export const PartidoAlineacionesEquipoTituloWrapper = styled.div`
@@ -389,8 +399,9 @@ export const PartidoAlineacionesEquipoTituloSwitch = styled(motion.div)`
     left: 0;
     width: 50%;
     height: 100%;
-    background-color: var(--black-100);
-    border-radius: 20px;
+    background-color: var(--white-50);
+    border-radius: 16px;
+    border: 1px solid var(--white-100)
 `;
 
 export const PartidoAlineacionesEquipoNombre = styled.div`
@@ -404,14 +415,13 @@ export const PartidoAlineacionesEquipoNombre = styled.div`
     align-items: center;
     width: 100%;
     gap: 10px;
-    img {
-        width: 20px;
-    }
 
     p {
-        font-size: 14px;
-        font-weight: 600;
-        
+        font-size: 16px;
+    }
+
+    img {
+        width: 20px;
     }
 
     &:hover {
@@ -419,9 +429,15 @@ export const PartidoAlineacionesEquipoNombre = styled.div`
     }
 
     &.active {
-        color: var(--black-900);
+        p {
+            color: var(--black-800);
+        }
+        
         &:hover {
-            color: var(--black-700);
+            p {
+                color: var(--black-800);
+            }
+            
         }
     }
     
@@ -435,145 +451,8 @@ export const PartidoAlineacionesEquipoNombre = styled.div`
     }
 `;
 
-export const PartidoAlineacionesEquipoJugadores = styled(motion.div)`
-    display: flex;
-    flex-direction: column;
-`
-
-export const PartidoAlineacionesEquipoJugadoresWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    div {
-        &:last-child {
-            border-bottom: none;
-        }
-    }
-`
-
-export const PartidoAlineacionesEquipoJugadoresTitulo = styled.div`
-    display: flex;
-    padding: 20px;
-    justify-content: center;
-    font-weight: 600;
-    padding-top: 30px;
-`
-
-export const PartidoAlineacionesEquipoJugador = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 10px 20px;
-    border-bottom: 1px solid var(--black-200);
-    img {
-        height: 20px;
-    }
-`
-
-export const PartidoAlineacionesEquipoJugadorNombre = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-
-    div {
-        display: flex;
-        gap: 7px;
-        align-items: center;
-        a {
-            color: var(--red);
-            font-weight: 500;
-            font-size: 14px;
-        }
-        span {
-            font-weight: 500;
-            font-size: 14px;
-            width: auto;
-        }
-
-        img {
-            height: 10px;
-            object-fit: cover;
-            width: 10px;
-            border-radius: 50%;
-        }
-    }
-    
-
-    p {
-        color: var(--black-600);
-        font-size: 10px;
-    }
-`
-
-export const PartidoAlineacionesEquipoJugadorNombreWrapper = styled.div`
-    display: flex;
-    gap: 15px;
-    align-items: center;
-
-    img {
-        height: 20px;
-        width: 20px;
-        object-fit: cover;
-        object-position: top;
-        border-radius: 50%;
-    }
-
-    span {
-        width: 20px;
-        text-align: end;
-        font-weight: 600;
-    }
-`
-
-export const PartidoAlineacionesEquipoJugadorIncidencias = styled.div`
-    display: flex;
-    gap: 2px;
-`
-
-export const PartidoAlineacionesEquipoJugadorIncidencia = styled.div`
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    height: 12px;
-
-    p {
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 18px;
-        width: 18px;
-        border-radius: 50%;
-        border: 1px solid var(--black-300);
-        svg {
-            font-size: 12px;
-        }
-    }
-    
-
-    &.amarilla {
-        color: var(--yellow);
-    }
-
-    &.roja {
-        color: var(--red);
-    }
-
-    &.cambio_sale {
-        color: var(--red);
-    }
-
-    &.cambio_entra {
-        color: var(--green);
-    }
-`
-
 export const PartidoInformacionAdicionalWrapper = styled.div`
-    background-color: var(--black-50);
+    background-color: var(--white-0);
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -604,6 +483,8 @@ export const PartidoInformacionAdicionalItem = styled.div`
 `
 
 
+// PartidoAlineacionesContainer.jsx
+
 export const PartidoAlineacionesContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -611,9 +492,9 @@ export const PartidoAlineacionesContainer = styled.div`
 `
 
 export const PartidoAlineacionWrapper = styled.div`
-    background-color: var(--black-0);
-    border: 1px solid var(--black-200);
-    border-radius: 16px;
+    background-color: var(--white-0);
+    border: 1px solid var(--white-100);
+    border-radius: var(--radius);
 
 `
 
@@ -625,11 +506,11 @@ export const PartidoAlineacionTitulo = styled.div`
     span {
         font-size: 16px;
         font-weight: 600;
-        color: var(--black-900);
+        color: var(--black-800);
     }
 `
 
-export const PartidoAlineacionLista = styled.div`
+export const PartidoAlineacionLista = styled.ul`
     display: flex;
     flex-direction: column;
 
@@ -640,12 +521,16 @@ export const PartidoAlineacionLista = styled.div`
     }
 `
 
-export const PartidoAlineacionFila = styled.div`
+export const PartidoAlineacionFila = styled.li`
     display: flex;
     justify-content: space-between;
     padding: 14px 20px;
     align-items: center;
-    border-bottom: 1px solid var(--black-200);
+    gap: 15px;
+    border-bottom: 1px solid var(--white-100);
+    @media (max-width: 400px) {
+        padding: 14px;
+    }
 `
 
 export const PartidoAlineacionJugadorLink = styled(NavLink)`
@@ -664,6 +549,10 @@ export const PartidoAlineacionJugadorLink = styled(NavLink)`
         border-radius: 50%;
         height: 30px;
         object-fit: cover;
+        object-position: top;
+        @media (max-width: 568px) {
+            display: none;
+        }
     }
 
     span {
@@ -674,6 +563,10 @@ export const PartidoAlineacionJugadorLink = styled(NavLink)`
 
     &:hover {
         opacity: .6;
+    }
+
+    @media (max-width: 40px) {
+        gap: 10px;
     }
 `
 
@@ -686,6 +579,9 @@ export const PartidoAlineacionJugador = styled.div`
 
     img {
         width: 30px;
+        @media (max-width: 568px) {
+            display: none;
+        }
     }
 
     span {
@@ -704,7 +600,7 @@ export const PartidoAlineacionJugadorDetalle = styled.div`
     h5 {
         font-size: 12px;
         font-weight: 500;
-        color: var(--black-400);
+        color: var(--black-500);
     }
 `
 
@@ -717,9 +613,12 @@ export const PartidoAlineacionJugadorNombre = styled.div`
         width: 10px;
         height: 10px;
         border-radius: 50%;
+        @media (max-width: 568px) {
+            display: flex;
+        }
     }
 
-    span {
+    strong {
         font-weight: 700;
         text-transform: uppercase;
     }
@@ -752,3 +651,306 @@ export const PartidoAlineacionIncidencia = styled.div`
         color: var(--green);
     }
 `
+
+export const PartidoGaleria = styled(Galleria)`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    background-color: var(--white-0) !important;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--white-100);
+
+    img {
+        width: 100%;
+        height: auto;
+        max-width: none;
+    }
+
+    .p-galleria-indicators {
+        display: flex;
+        gap: 10px;
+
+        button {
+            height: 12px;
+            width: 12px;
+            background-color: var(--white-100);
+            &:hover {
+                background-color: var(--black-300);
+            }
+        }
+
+        .p-highlight button {
+            background: var(--red);
+            color: #ffffff;
+        }
+    }
+
+    p {
+        font-size: 14px;
+        font-weight: 500;
+        @media (max-width: 568px) {
+            font-size: 12px;
+        }
+
+    }
+`
+
+/* PartidoCampaña.jsx */
+
+export const PartidoCampañaContainer = styled.div`
+    width: 100%;
+    background-color: var(--white-0);
+    border: 1px solid var(--white-100);
+    border-radius: 16px;
+    overflow: hidden;
+`
+
+export const PartidoCampañaTitulo = styled.header`
+    display: flex;
+    padding: 20px;
+
+    h3 {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--black-800);
+    }
+`
+
+
+export const PartidoCampañaLink = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 20px;
+
+    a {
+        gap: 5px;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        color: var(--black-500);
+        font-size: 14px;
+
+        &:hover {
+            opacity: .8;
+            text-decoration: underline;
+        }
+    }
+`
+
+export const PartidoCampañaCard = styled(NavLink)`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 5px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--white-100);
+    
+    &.activo {
+        background-color: var(--white-50);
+
+        &:hover {
+            opacity: 1;
+        }
+        p {
+            color: var(--black-800);
+        }
+
+        span {
+            background-color: var(--white-0);
+        }
+    }
+
+    &:hover {
+        opacity: 0.7;
+    }
+`
+
+export const PartidoCampañaEquipos = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+
+    .fecha {
+        font-weight: 500;
+        font-size: 12px;
+        color: var(--black-500);
+        margin-bottom: 2px;
+    }
+`
+
+export const PartidoCampañaEquipo = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+
+    p {
+        width: 100%;
+    }
+
+
+    span {
+        display: flex;
+        justify-content: center;
+        background-color: var(--white-100);
+        width: 28px;
+        font-size: 14px;
+        color: var(--black-800);
+        font-weight: 700;
+    }
+
+    img { 
+        height: 15px;
+    }
+
+    
+`
+
+export const PartidoCampañaEquipoNombre = styled.div`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+
+
+    p {
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    img { 
+        height: 15px;
+    }
+`
+
+export const PartidoVideoWrapper = styled.section`
+    padding: 20px;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--black-0);
+    border: var(--border);
+    border-radius: var(--radius);
+`
+
+export const PartidoVideoTitulo = styled.header`
+    h3 {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--black-800);
+    }
+
+    iframe, video {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 16px;
+    }
+`
+
+export const PartidoVideo = styled.header`
+
+    iframe, video {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 16px;
+    }
+`
+
+export const PartidoImagenesWrapper = styled.section`
+    padding: 20px;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white-0);
+    border: var(--border);
+    border-radius: var(--radius);
+`
+
+export const PartidoImagenesTitulo = styled.header`
+    h3 {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--black-800);
+    }
+`
+
+export const PartidoHistorialWrapper = styled.section`
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white-0);
+    border: var(--border);
+    border-radius: var(--radius);
+`
+
+export const PartidoHistorialTitulo = styled.header`
+    padding: 20px;
+    h3 {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--black-800);
+    }
+
+    iframe, video {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 16px;
+    }
+`
+
+export const PartidoHistorialEquipos = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px;
+    align-items: end;
+    border-bottom: var(--border);
+`
+
+export const PartidoHistorialEquipo = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+
+    img {
+        width: 40px;
+    }
+
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: 700;
+        width: 70px;
+        color: var(--black-800);
+        padding: 5px 0;
+        border-radius: var(--radius);
+        border: var(--border);
+        background-color: var(--white-100);
+
+
+        &.red {
+            background-color: var(--red);
+            color: var(--white-0);
+        }
+
+        &.green {
+            color: var(--white-0);
+            background-color: var(--green);
+        }
+    }
+
+    span {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--black-800);
+    }
+`
+
+export const PartidoHistorialLink = styled(PartidoCampañaLink)``

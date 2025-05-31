@@ -19,3 +19,21 @@ export function formatearDDMMAAAA(fechaISO) {
 
     return `${dia}/${mes}/${año}`;
 }
+
+export function formatearDDMM(fechaISO) {
+    const fecha = new Date(fechaISO);
+    const dia = fecha.getDate();
+    const mes = fecha.getMonth() + 1;  // Sumar 1 para corregir el índice del mes
+    const año = fecha.getFullYear();
+
+    return `${dia}/${mes}`;
+}
+
+export function formatearFechaImagenesPartido(fechaISO) {
+    const fecha = new Date(fechaISO);
+    const dia = fecha.getDate();
+    const mes = fecha.getMonth();
+    const año = fecha.getFullYear();
+
+    return `${año}-${mes}-${dia}`;
+}

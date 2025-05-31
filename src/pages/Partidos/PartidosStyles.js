@@ -2,12 +2,83 @@ import styled from "styled-components";
 import { ContainerStyled, WrapperStyled } from "../../components/Templates/Templates";
 import { DataTable } from "primereact/datatable";
 
-export const PartidosContainer = styled(ContainerStyled)``
+export const PartidosContainer = styled(ContainerStyled)`
+    flex-direction: column;
+    align-items: center;
+`
+
+export const PartidosDropdownContainer = styled(ContainerStyled)`
+    width: 100%;
+    background-color: var(--white-0);
+`
+
+export const PartidosDropdownWrapper = styled(WrapperStyled)`
+    width: 100%;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    max-width: 900px;
+
+    .p-dropdown {
+        width: fit-content;
+    }
+    @media (max-width: 768px) {
+        padding: 40PX;
+    }
+`
+
+export const PartidosMesesContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: var(--white-100);
+    flex-wrap: wrap;
+  a {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    width: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 0;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease-in-out;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background-color: var(--red);
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    &:hover,
+    &.active {
+        color: var(--red);
+
+        &::after {
+            transform: scaleX(1);
+        }
+        }
+    }
+`;
 
 export const PartidosWrapper = styled(WrapperStyled)`
     flex-direction: column;
     gap: 5px;
     padding-top: 40px;
+    padding-bottom: 40px;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    gap: 20px;
 `
 
 export const PartidosDataTable = styled(DataTable)`
@@ -78,10 +149,10 @@ export const ResultadoBodyTemplate = styled.div`
     align-items: center;
     justify-content: center;
     
-    
     div {
         font-weight: 600;
         width: fit-content;
+        min-width: 50px;
         display: flex;
         align-items: center;
         justify-content: center;

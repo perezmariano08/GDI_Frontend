@@ -26,18 +26,18 @@ export const ContainerStyled = styled.div`
 `
 
 export const WrapperStyled = styled.div`
-    max-width: 1260px;
+    max-width: 1230px;
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 0 30px;
+    padding: 0 15px;
 
     @media (max-width: 1200px) {
         
     }
 
     @media (max-width: 968px) {
-        padding: 0 20px;
+
     }
 
     @media (max-width: 768px) {
